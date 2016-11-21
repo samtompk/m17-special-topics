@@ -9,14 +9,11 @@ var TweetContainer = React.createClass({
         return {tweets:[]}
     },
     componentDidMount(){
-        this.tweetRef = firebase.database().ref('tweets');
-        this.tweetRef.on('value', (snapshot)=> {
+        // Create a reference to a point called 'tweeets'
 
-            // In case there are no tweets
-            if(snapshot.val()){
-                this.setState({tweets:snapshot.val()});
-            }
-        });
+
+        // Set a listener so that, when a value changes, state is set
+
     },
 
     // Function to create a neew tweet
@@ -30,7 +27,9 @@ var TweetContainer = React.createClass({
             likes:0,
             time:firebase.database.ServerValue.TIMESTAMP // firebase service
         };
-        this.tweetRef.push(tweet);
+
+        // Push your tweet into your tweet reference
+
         event.target.reset();
     },
 
@@ -39,11 +38,9 @@ var TweetContainer = React.createClass({
         let ref = this.tweetRef.child(tweetId);
         ref.once('value').then(function(snapshot) {
             var newLikes = parseInt(snapshot.val().likes) + 1;
-            console.log(newLikes)
-            // Update on firebase
-            ref.update({
-                likes: newLikes
-            });
+
+            // Update the number of likes on firebase
+
         });
     },
     render() {
@@ -56,10 +53,7 @@ var TweetContainer = React.createClass({
             <section className="container">
                 <TweetBox handleSubmit={this.createTweet}/>
                 {tweetKeys.map((d) => {
-                    return <Tweet key={d}
-                        data={this.state.tweets[d]}
-                        handleClick={() => this.likeTweet(d)}
-                    />
+                    return <div>hello</div>
                 })}
             </section>
         )
