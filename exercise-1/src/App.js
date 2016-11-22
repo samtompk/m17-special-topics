@@ -21,7 +21,13 @@ var App = React.createClass({
         firebase.initializeApp(FirebaseConfig);
 
         // Check for authentication state change (test if there is a user)
-
+        firebase.auth().onAuthStateChanged((user) => {
+            if (this.state.checked !== true) {
+                if(user) {
+                    this.setState({user:user, checked:true})
+                }
+            }
+        });
 
 
     },
@@ -54,9 +60,14 @@ var App = React.createClass({
         event.preventDefault();
 
         // Get form values
+        let email = event.target.elements['email'].value;
+        let password = event.target.elements['password'].value;
 
         // Sign your user in with their credentials, and set the state
-
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((user) => {
+                this.setState({user:firebase.auth().currentUser});
+            }); 
 
         // Clear form
         event.target.reset();
@@ -81,11 +92,11 @@ var App = React.createClass({
         // Determine which 'authenticate' component should be shown
         if(this.state.authOption == 'sign-up') {
             // Pass in a `submit` function as a parameter
-            var authComponent = <SignUp/>
+            var authComponent = <SignUp submit={this.signUp} />
         }
         else {
             // Pass in a `submit` function as a parameter
-            var authComponent = <SignIn/>
+            var authComponent = <SignIn submit={this.signIn} />
         }
         return(
             <div>
